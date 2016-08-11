@@ -1,0 +1,128 @@
+<html lang="en">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="http://www.eoc.gov.pk/assets/icon/favicon.ico">
+    <title>IDIMS - High Risk Mobile Population</title> 
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<!-- Generic page styles -->
+	<link rel="stylesheet" href="css/style.css">
+	<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+	<link rel="stylesheet" href="css/jquery.fileupload.css">
+	<link type="text/css" rel="stylesheet" href="./css/layout.css"> 
+	<link rel="stylesheet" href="./css/jquery.fileupload.css">
+</head>
+
+<body class="default" style="overflow: visible;" data-feedly-mini="yes">
+
+	<div class="container-fluid container-wrap">
+      <div class="row"> 
+		<div class="col-sm-12 col-md-12 right-side">
+			<div class="row">
+				<section class="filters col-sm-12 col-md-12 ">
+				<div class="col-md-12 col-lg-12">
+                    		<h4>Mobile Population - Manual Data Uploading Interface</h4>
+                    </div>
+				</section>
+			</div>
+        <div class="row"> 
+		<div class="col-sm-6 col-md-6">
+			<div class="form-group">
+				<div class="col-md-12">
+				<div id="fileupload" class="upload-panel">	
+					<div class="row fileupload-buttonbar">
+						<div class="col-lg-12">
+						<p>Click the below button and select the dataset that you would like to import into IDIMS. You can upload datasets on both movements and/or events. Please note that the import will remove any previously existing datasets in IDIMS and will insert the complete new dataset.<br> <br> The System does not valdiate the Number of records that are uploaded.</p>
+						<div class="alert alert-info" role="alert">File must be <b>.csv</b> (you can download a template of the dataset structures by clicking the right Download Template button)</div>
+							<!-- The fileinput-button span is used to style the file input field as button -->
+							<span class="btn btn-success fileinput-button">
+								<i class="glyphicon glyphicon-plus"></i>
+								<span>Upload Nomadic Movements data...</span>
+								<!-- The file input field used as target for the file upload widget -->
+								<input id="fileupload" type="file" name="files[]" multiple>
+							</span>
+							<br>
+							<br>
+							<span class="btn btn-success fileinput-button">
+								<i class="glyphicon glyphicon-plus"></i>
+								<span>Upload Events data...</span>
+								<!-- The file input field used as target for the file upload widget -->
+								<input id="fileupload" type="file" name="files[]" multiple>
+							</span>
+							<br>
+							<br>							
+							<!-- The global progress bar -->
+							<div id="progress" class="progress">
+								<div class="progress-bar progress-bar-success"></div>
+							</div>
+						</div>
+					</div>
+					<!-- The container for the uploaded files -->
+					<div class="upload-table">
+						<div id="files" class="files"></div>
+					</div>
+				</div>
+				</div>
+			</div> 
+		</div>
+		<div class="col-sm-6 col-md-6">
+		<div class="alert alert-warning" role="alert">
+		<p>This interface is provided to upload the data on Nomadic Movements and Nomadic Events into IDIMS.<br><br>
+		Please download the below CSV files (which are the templates), which contain the table structures that the ETL Tool will accept.<br>
+		Once the file is uploaded wait until the page refresh.
+		<br><br>
+		<button type="button" class="btn btn-default btn-lg" onclick="window.location=&#39;nomadic_events.csv&#39;">
+		<span class="fa fa-download" aria-hidden="true"></span> Download Template for Nomadic Movements
+		</button>
+		<br><br>
+		<button type="button" class="btn btn-default btn-lg" onclick="window.location=&#39;nomadic_movements.csv&#39;">
+		<span class="fa fa-download" aria-hidden="true"></span> Download Template for Nomadic Events
+		</button>		
+		</p>
+		</div>
+		</div>
+		</div>
+	</div>
+	</div>
+	</div>
+	<script src="js/jquery.min.js"></script>
+	<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+	<script src="js/jquery.ui.widget.js"></script>
+	<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+	<script src="js/jquery.iframe-transport.js"></script>
+	<!-- The basic File Upload plugin -->
+	<script src="js/jquery.fileupload.js"></script>
+	<!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
+	<script src="js/bootstrap.min.js"></script>
+	<script>
+		/*jslint unparam: true */
+		/*global window, $ */
+		$(function () {
+			'use strict';
+			// Change this to the location of your server-side upload handler:
+			var url = window.location.hostname === 'blueimp.github.io' ?
+						'http://localhost/nomads/' : 'server/php/';
+			$('#fileupload').fileupload({
+				url: url,
+				dataType: 'json',
+				done: function (e, data) {
+					$.each(data.result.files, function (index, file) {
+						$('<p/>').text(file.name).appendTo('#files');
+					});
+				},
+				progressall: function (e, data) {
+					var progress = parseInt(data.loaded / data.total * 100, 10);
+					$('#progress .progress-bar').css(
+						'width',
+						progress + '%'
+					);
+				}
+			}).prop('disabled', !$.support.fileInput)
+				.parent().addClass($.support.fileInput ? undefined : 'disabled');
+		});
+	</script>
+</body>
+</html>
